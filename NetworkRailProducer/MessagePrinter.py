@@ -1,9 +1,13 @@
 from datetime import datetime
-from SClassHandler import SClassHandler
+from MessageHandler import MessageHandler
 
-class SClassPrinter(SClassHandler):
-    def __init__(self, prefix):
-        self._prefix = prefix
+class MessagePrinter(MessageHandler):
+    """ Simple Message Handler class which just prints out the message to the console """
 
-    def process(self, message):
-        print(self._prefix, datetime.now(), message)
+    def interested(self, message):
+        # We're interested in all messages
+        return True
+
+    def handle(self, message):
+        """ Simply print out the message with a prefix of a timestamp """
+        print(datetime.now(), message)

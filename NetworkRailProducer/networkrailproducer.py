@@ -2,12 +2,14 @@ import json
 import logging
 
 from NetworkRailConnection import NetworkRailConnection
-from NetworkRailListener import NetworkRailListener
-from SClassPrinter import SClassPrinter
+from MessagePrinter import MessagePrinter
 
 from time import sleep
 
 class Application:
+    """
+    Application class which encapsulates connecting to the Network Rail feeds and Kafka
+    """
     def __init__(self):
         pass
 
@@ -18,14 +20,9 @@ class Application:
 
             connection = NetworkRailConnection(feed_username, feed_password)
             connection.connect()
-
-            listener = NetworkRailListener(connection)
-            listener.register_handler(SClassPrinter("TD"))
-            connection.subscribe("/topic/TD_ALL_SIG_AREA", listener)
-
-            listener = NetworkRailListener(connection)
-            listener.register_handler(SClassPrinter("TRUST"))
-            connection.subscribe("/topic/TRAIN_MVT_ALL_TOC", listener)
+            connection.register_handler(MessagePrinter(), "TD_ALL_SIG_AREA")
+            connection.subscribe("/topic/TD_ALL_SIG_AREA")
+            connection.subscribe("/topic/TRAIN_MVT_ALL_TOC")
 
             while connection.is_connected():
                 sleep(1)
@@ -34,5 +31,5 @@ class Application:
             logging.exception(ex)
 
 if __name__ == "__main__":
-    logging.basicConfig(filename="networrailproducer.log", level=logging.INFO)
+    logging.basicConfig(filename="networkrailproducer.log", level=logging.INFO)
     Application().run()
