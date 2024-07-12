@@ -37,7 +37,7 @@ class Application:
             connection.register_handler(BerthProducer(kafka_producer), "TD_ALL_SIG_AREA")
             connection.register_handler(SignallingProducer(kafka_producer), "TD_ALL_SIG_AREA")
             connection.register_handler(MovementProducer(kafka_producer), "TRAIN_MVT_ALL_TOC")
-            
+
             connection.subscribe("/topic/TD_ALL_SIG_AREA")
             connection.subscribe("/topic/TRAIN_MVT_ALL_TOC")
 
