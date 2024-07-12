@@ -76,7 +76,12 @@ class NetworkRailConnection(stomp.ConnectionListener):
     
     def register_handler(self, handler, topic = None):
         """ Registers a handler for the data, so that different handlers can handle different data received for this listener """
-        self._handlers[topic].add(handler)
+        """ topic can be a single topic, a list of topics or None, in which case all events are handled """
+        if isinstance(topic, list):
+            for item in topic:
+                self._handlers[item].add(handler)
+        else:
+            self._handlers[topic].add(handler)
 
     def on_message(self, frame):
         """

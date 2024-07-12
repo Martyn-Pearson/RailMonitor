@@ -8,7 +8,8 @@ from confluent_kafka import Producer
 from NetworkRailConnection import NetworkRailConnection
 from MessagePrinter import MessagePrinter
 from BerthProducer import BerthProducer
-
+from SignallingProducer import SignallingProducer
+from MovementProducer import MovementProducer
 
 class Application:
     """
@@ -32,8 +33,11 @@ class Application:
             # Connect to the Network Rail feeds, register the handlers and subscribe
             connection = NetworkRailConnection(feed_username, feed_password)
             connection.connect()
-            # connection.register_handler(MessagePrinter(), "TRAIN_MVT_ALL_TOC")
+#            connection.register_handler(MessagePrinter(), "TRAIN_MVT_ALL_TOC")
             connection.register_handler(BerthProducer(kafka_producer), "TD_ALL_SIG_AREA")
+            connection.register_handler(SignallingProducer(kafka_producer), "TD_ALL_SIG_AREA")
+            connection.register_handler(MovementProducer(kafka_producer), "TRAIN_MVT_ALL_TOC")
+            
             connection.subscribe("/topic/TD_ALL_SIG_AREA")
             connection.subscribe("/topic/TRAIN_MVT_ALL_TOC")
 
